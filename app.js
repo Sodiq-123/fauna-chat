@@ -8,6 +8,7 @@ var socketio = require('socket.io')
 // Routes for the API
 var indexRouter = require('./src/routes/index');
 var usersRouter = require('./src/routes/users');
+var deleteRouter = require('./src/routes/delete');
 
 var app = express();
 
@@ -20,6 +21,7 @@ module.exports = () => {
   // Specify the routes
   app.use('/api', indexRouter);
   app.use('/api/users', usersRouter);
+  app.use('/api/users', deleteRouter);
   
   // catch 404 and forward to error handler
   app.use('*', (req, res) => {
