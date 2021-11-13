@@ -33,7 +33,7 @@ exports.createUser = async (req, res) => {
     }
     const user = await createUser(email, username, password)
     if (user) {
-      return res.status(200).json({
+      return res.status(201).json({
         success: true,
         message: 'Successfully created user',
         user: user

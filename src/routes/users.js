@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var { createUser, loginUser, getAllUsers, getUserById, getUserByEmail } = require('../controllers/users')
+var { createUser, loginUser, getAllUsers, getUserById } = require('../controllers/users')
 
 router.post('/create', createUser)
 router.post('/login', loginUser)

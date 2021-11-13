@@ -15,7 +15,7 @@ exports.verifyToken = async (req, res, next) => {
       })
     }
     // delete user.password
-    // req.user = user
+    req.user = userId
     next()
   } catch (error) {
     res.status(500).json({

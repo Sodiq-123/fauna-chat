@@ -3,11 +3,11 @@ var express = require('express');
 var path = require('path');
 var logger = require('morgan');
 var cors = require('cors');
-var socketio = require('socket.io')
 
 // Routes for the API
 var indexRouter = require('./src/routes/index');
 var usersRouter = require('./src/routes/users');
+var chatRouter = require('./src/routes/chatRoom');
 var deleteRouter = require('./src/routes/delete');
 
 var app = express();
@@ -21,6 +21,7 @@ module.exports = () => {
   // Specify the routes
   app.use('/api', indexRouter);
   app.use('/api/users', usersRouter);
+  app.use('/api/chat', chatRouter);
   app.use('/api/users', deleteRouter);
   
   // catch 404 and forward to error handler

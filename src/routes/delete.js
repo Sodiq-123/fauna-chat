@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var { deleteUser } = require('../controllers/delete')
+var { deleteUser, deleteMessageById, deleteRoomById } = require('../controllers/delete')
 
 
 
