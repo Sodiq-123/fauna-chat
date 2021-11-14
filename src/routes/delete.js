@@ -1,11 +1,12 @@
 var express = require('express');
 var router = express.Router();
+var { verifyToken } = require('../middlewares/auth')
 var { deleteUser, deleteMessageById, deleteRoomById } = require('../controllers/delete')
 
 
 
-router.delete('/:id', deleteUser)
-// router.delete('/', deleteRoomById)
-// router.delete('/', deleteMessageById)
+router.delete('/user/:id', verifyToken, deleteUser)
+router.delete('/room/:roomId', verifyToken, deleteRoomById)
+router.delete('/messsage/:messageId', verifyToken, deleteMessageById)
 
 module.exports = router;

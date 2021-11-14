@@ -22,7 +22,7 @@ module.exports = () => {
   app.use('/api', indexRouter);
   app.use('/api/users', usersRouter);
   app.use('/api/chat', chatRouter);
-  app.use('/api/users', deleteRouter);
+  app.use('/api/delete', deleteRouter);
   
   // catch 404 and forward to error handler
   app.use('*', (req, res) => {

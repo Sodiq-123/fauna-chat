@@ -1,10 +1,9 @@
-var { deleteUserAccount } = require('../utils/fauna')
+var { deleteUserAccount, deleteChatRoom, deleteMessage } = require('../utils/fauna')
 
 exports.deleteUser = async (req, res) => {
   try {
-    const userId = req.params.id
+    const userId = req.user
     const user = await deleteUserAccount(userId)
-    console.log('User: ', user)
     if (!user) {
       return res.status(400).json({
         success: false,
@@ -25,16 +24,44 @@ exports.deleteUser = async (req, res) => {
 
 exports.deleteRoomById = async (req, res) => {
   try {
-    // const 
+    const roomId = req.params.id
+    const room = await deleteChatRoom(roomId)
+    if (!room) {
+      return res.status(400).json({
+        success: false,
+        message: 'Chat Room not found'
+      })
+    }
+    return res.status(200).json({
+      success: true,
+      message: 'Chat Room deleted successfully'
+    })
   } catch (error) {
-    return
+    return res.status(400).json({
+      success: false,
+      message: 'Chat Room not deleted'
+    })
   }
 }
 
 exports.deleteMessageById = async (req, res) => {
   try {
-    // const 
+    const messageId = req.params.id
+    const message = await deleteMessage(messageId)
+    if (!message) {
+      return res.status(400).json({
+        success: false,
+        message: 'Message not found'
+      })
+    }
+    return res.status(200).json({
+      success: true,
+      message: 'Message deleted successfully'
+    })
   } catch (error) {
-    return
+    return res.status(400).json({
+      success: false,
+      message: 'Message not deleted'
+    })
   }
 }
