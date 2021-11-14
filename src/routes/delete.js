@@ -7,6 +7,6 @@ var { deleteUser, deleteMessageById, deleteRoomById } = require('../controllers/
 
 router.delete('/user/:id', verifyToken, deleteUser)
 router.delete('/room/:roomId', verifyToken, deleteRoomById)
-router.delete('/messsage/:messageId', verifyToken, deleteMessageById)
+router.delete('/message/:messageId', verifyToken, deleteMessageById)
 
 module.exports = router;

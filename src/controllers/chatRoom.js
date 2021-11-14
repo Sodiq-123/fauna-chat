@@ -105,12 +105,13 @@ exports.markMessageAsRead = async (req, res) => {
     if (chatRoom) {
       // Mark message as read and add user who read it
       const message = await updateMessageReadBy(messageId, users)
-      console.log('Message: ', message)
-      return res.status(200).json({
-        success: true,
-        message: 'Message marked as read',
-        data: message
-      })
+      if (message) {
+        return res.status(200).json({
+          success: true,
+          message: 'Message marked as read',
+          data: message
+        })
+      }
     }
     return res.status(404).json({
       success: false,

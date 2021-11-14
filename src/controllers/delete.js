@@ -1,4 +1,4 @@
-var { deleteUserAccount, deleteChatRoom, deleteMessage } = require('../utils/fauna')
+var { deleteUserAccount, deleteChatRoom, deleteMessage, removeUserFromChatRoom } = require('../utils/fauna')
 
 exports.deleteUser = async (req, res) => {
   try {
@@ -22,9 +22,31 @@ exports.deleteUser = async (req, res) => {
   }
 }
 
+exports.removeUserFromChatRoom = async (req, res) => {
+  try {
+    const { userId, roomId } = req.params
+    const room = await removeUserFromChatRoom(roomId, userId)
+    if (!room) {
+      return res.status(400).json({
+        success: false,
+        message: 'User not found in Chat Room'
+      })
+    }
+    return res.status(200).json({
+      success: true,
+      message: 'User removed from Chat Room successfully'
+    })
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message: error.message
+    })
+  }
+}
+
 exports.deleteRoomById = async (req, res) => {
   try {
-    const roomId = req.params.id
+    const { roomId } = req.params
     const room = await deleteChatRoom(roomId)
     if (!room) {
       return res.status(400).json({
@@ -34,7 +56,8 @@ exports.deleteRoomById = async (req, res) => {
     }
     return res.status(200).json({
       success: true,
-      message: 'Chat Room deleted successfully'
+      message: 'Chat Room deleted successfully',
+      data: room
     })
   } catch (error) {
     return res.status(400).json({
@@ -46,7 +69,7 @@ exports.deleteRoomById = async (req, res) => {
 
 exports.deleteMessageById = async (req, res) => {
   try {
-    const messageId = req.params.id
+    const { messageId } = req.params
     const message = await deleteMessage(messageId)
     if (!message) {
       return res.status(400).json({
@@ -56,7 +79,8 @@ exports.deleteMessageById = async (req, res) => {
     }
     return res.status(200).json({
       success: true,
-      message: 'Message deleted successfully'
+      message: 'Message deleted successfully',
+      data: message
     })
   } catch (error) {
     return res.status(400).json({

@@ -192,13 +192,13 @@ exports.addUserToChatRoom = async (chatRoomId, userId) => {
 exports.removeUserFromChatRoom = async (chatRoomId, userId) => {
   try {
     const chatRoom = await Client.query(
-      q.Update(
-        q.Ref(q.Collection('chatRoom'), chatRoomId),
+      q.Let(
         {
-          data: {
-            users: q.Remove(q.Select('users', q.Get(q.Ref(q.Collection('chatRoom'), chatRoomId)), []), userId)
-          }
-        }
+          ref: q.Ref(q.Collection("chatRoom"), chatRoomId),
+          doc:q.Get(q.Var('ref')),
+          array:q.Select(['data','users'],q.Var('doc'))
+        },
+        q.Update(q.Var('ref'),{data:{users:q.Distinct(q.Remove([userId],q.Var('array')))}})
       )
     )
     return chatRoom
@@ -229,7 +229,7 @@ exports.createMessage = async (chatRoomId, userId, message) => {
           data: {
             chatRoomId: q.Ref(q.Collection("chatRoom"), chatRoomId),
             user: userId,
-            readBy: [],
+            readBy: [userId],
             message,
             createdAt: new Date().toString()
           }
