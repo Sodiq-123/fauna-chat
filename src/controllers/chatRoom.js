@@ -1,5 +1,5 @@
 var makeValidation = require('@withvoid/make-validation')
-var { createMessage, getChatRoomById, createChatRoom, addUserToChatRoom, getAllChatRooms, updateMessageReadBy } = require('../utils/fauna')
+var { createMessage, getChatRoomById, createChatRoom, addUserToChatRoom, getAllChatRooms, updateMessageReadBy, getChatRoomForUser } = require('../utils/fauna')
 
 
 // create chat room
@@ -164,6 +164,29 @@ exports.getChatRooms = async (req, res) => {
     return res.status(400).json({
       success: false,
       error: error.message
+    })
+  }
+}
+
+exports.getChatRoomForUser = async (req, res) => {
+  try {
+    const { userId } = req.params
+    const chatRoom = await getChatRoomForUser(userId)
+    if (chatRoom) {
+      return res.status(200).json({
+        success: true,
+        message: 'Chat room found',
+        data: chatRoom.data
+      })
+    }
+    return res.status(404).json({
+      success: false,
+      message: 'Chat room not found'
+    })
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      error: error.message 
     })
   }
 }

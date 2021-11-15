@@ -104,7 +104,6 @@ exports.deleteUserAccount = async (userId) => {
   }
 }
 
-// Helpers for the chatRoom
 exports.createChatRoom = async (name, userId) => {
   try {
     const chatRoom = await Client.query(
@@ -138,13 +137,32 @@ exports.getChatRoomById = async (chatRoomId) => {
   }
 }
 
-exports.getChatRoomByUserId = async (userId) => {
+// get how many chatroom a user has
+exports.getChatRoomCount = async (userId) => {
+  try {
+    const chatRoom = await Client.query(
+      q.Let(
+        {
+          ref: q.Ref(q.Collection("chatRoom"), userId),
+          doc:q.Get(q.Var('ref')),
+          array:q.Select(['data','users'],q.Var('doc'))
+        },
+        q.Count(q.Var('array'))
+      )
+    )
+    return chatRoom
+  } catch (error) {
+    console.log(error.message)
+  }
+}
+
+exports.getChatRoomForUser = async (userId) => {
   try {
     const chatRoom = await Client.query(
       q.Map(
         q.Paginate(
           q.Match(
-            q.Index('chatRoom_by_user'), userId
+            q.Index('chatroom_for_user'), userId
           )
         ),
         q.Lambda(x => q.Get(x))
@@ -261,24 +279,6 @@ exports.updateMessageReadBy = async (messageId, userId) => {
   }
 }
 
-exports.getAllMessages = async (chatRoomId) => {
-  try {
-    const messages = await Client.query(
-      q.Map(
-        q.Paginate(q.Documents(q.Collection("chatMessage"), {
-          query: q.Match(
-            q.Index('messages_by_chatRoomId'), chatRoomId
-          )
-        })),
-        q.Lambda(x => q.Get(x))
-      )
-    )
-    return messages
-  } catch (error) {
-    console.log(error.message)
-  }
-}
-
 exports.deleteMessage = async (messageId) => {
   try {
     const message = await Client.query(
@@ -290,4 +290,4 @@ exports.deleteMessage = async (messageId) => {
   } catch (error) {
     console.log(error.message)
   }
-}
+} 
