@@ -55,15 +55,16 @@ exports.sendMessage = async (req, res) => {
       })
     }
     const messageSent = await createMessage(chatRoomId, users, message)
-    global.io.sockets.in(chatRoomId).emit('new messsage', { message: message })
-    return res.status(200).json({
-      success: true,
-      message: 'Message sent',
-      data: {
-        id: messageSent.ref.id,
-        messageSent: messageSent.data
-      }
-    })
+    if (messageSent) {
+      return res.status(200).json({
+        success: true,
+        message: 'Message sent',
+        data: {
+          id: messageSent.ref.id,
+          messageSent: messageSent.data
+        }
+      })
+    }
   } catch (error) {
     return res.status(500).json({
       success: false,
