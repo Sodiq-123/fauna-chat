@@ -16,7 +16,7 @@ var corsOption = {
 };
 
 // view engine setup
-module.exports = () => {
+module.exports = (app) => {
   app.use(cors(corsOption));
   app.use(logger('dev'));
   app.use(express.json());
