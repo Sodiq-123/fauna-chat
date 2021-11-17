@@ -11,9 +11,13 @@ var chatRouter = require('./src/routes/chatRoom');
 var deleteRouter = require('./src/routes/delete');
 
 var app = express();
+var corsOption = {
+	"origin" : "*",
+};
 
 // view engine setup
 module.exports = () => {
+  app.use(cors(corsOption));
   app.use(logger('dev'));
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
