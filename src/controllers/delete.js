@@ -49,7 +49,7 @@ exports.deleteRoomById = async (req, res) => {
     const { roomId } = req.params
     const room = await deleteChatRoom(roomId)
     if (!room) {
-      return res.status(400).json({
+      return res.status(404).json({
         success: false,
         message: 'Chat Room not found'
       })

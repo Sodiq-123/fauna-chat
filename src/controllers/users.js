@@ -42,7 +42,7 @@ exports.createUser = async (req, res) => {
   } catch (error) {
     return res.status(400).json({
       success: false,
-      message: 'User not succcessfully created'
+      message: 'User not successfully created'
     })
   }
 }
