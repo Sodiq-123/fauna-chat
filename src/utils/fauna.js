@@ -225,6 +225,19 @@ exports.removeUserFromChatRoom = async (chatRoomId, userId) => {
   }
 }
 
+exports.deleteMessage = async (messageId) => {
+  try {
+    const message = await Client.query(
+      q.Delete(
+        q.Ref(q.Collection('chatMessage'), messageId)
+      )
+    )
+    return message
+  } catch (error) {
+    console.log(error.message)
+  }
+}
+
 exports.deleteChatRoom = async (chatRoomId) => {
   try {
     const chatRoom = await Client.query(
@@ -278,16 +291,3 @@ exports.updateMessageReadBy = async (messageId, userId) => {
     console.log(error.message)
   }
 }
-
-exports.deleteMessage = async (messageId) => {
-  try {
-    const message = await Client.query(
-      q.Delete(
-        q.Ref(q.Collection('chatMessage'), messageId)
-      )
-    )
-    return message
-  } catch (error) {
-    console.log(error.message)
-  }
-} 

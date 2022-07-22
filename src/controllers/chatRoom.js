@@ -6,7 +6,7 @@ var { createMessage, getChatRoomById, createChatRoom, addUserToChatRoom, getAllC
 exports.createChatRoom = async (req, res) => {
   try {
     const { name } = req.body
-    const users = req.user
+    const user = req.user
     const validation = makeValidation(types => ({
       payload: req.body,
       checks: {
@@ -19,17 +19,25 @@ exports.createChatRoom = async (req, res) => {
         error: validation.errors
       })
     }
-    const chatRoom = await createChatRoom(name, users)
-    return res.status(200).json({
-      success: true,
-      message: 'Chat room created',
-      data: {
-        RoomId: chatRoom.ref.id,
-        Info: chatRoom.data
-      }
-    })
+    const chatRoom = await createChatRoom(name, user)
+    if (chatRoom) {
+      return res.status(201).json({
+        success: true,
+        message: 'Successfully created chat room',
+        data: {
+          RoomId: chatRoom.ref.id,
+          Info: chatRoom.data
+        }
+      })
+    } else {
+      return res.status(400).json({
+        success: false,
+        message: 'Chat room not successfully created'
+      })
+    }
   } catch (error) {
-    return res.status(500).json({
+    console.log(error)
+    return res.status(400).json({
       success: false,
       error: error.message 
     })
@@ -78,15 +86,27 @@ exports.addUserToChatRoom = async (req, res) => {
   try {
     const { chatRoomId } = req.params
     const users = req.user
-    const chatRoom = await addUserToChatRoom(chatRoomId, users)
-    if (chatRoom) {
+    const findChatRoom = await getChatRoomById(chatRoomId)
+    if (!findChatRoom) {
+      return res.status(404).json({
+        success: false,
+        message: 'Chat room not found'
+      })
+    }
+    const addUser = await addUserToChatRoom(chatRoomId, users)
+    if (addUser) {
       return res.status(200).json({
         success: true,
         message: 'User added to chat room',
         data: {
-          id: chatRoom.ref.id,
-          info: chatRoom.data
+          id: addUser.ref.id,
+          info: addUser.data
         }
+      })
+    } else {
+      return res.status(400).json({
+        success: false,
+        message: 'User not added to chat room'
       })
     }
   } catch (error) {
@@ -128,7 +148,7 @@ exports.markMessageAsRead = async (req, res) => {
 
 exports.getChatRoomById = async (req, res) => {
   try {
-    const { chatRoomId } = req.body
+    const { chatRoomId } = req.params
     const chatRoom = await getChatRoomById(chatRoomId)
     if (chatRoom) {
       return res.status(200).json({

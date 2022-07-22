@@ -7,7 +7,7 @@ var { sendMessage, createChatRoom, addUserToChatRoom, getChatRoomById, getChatRo
 router.post('/create-room', verifyToken, createChatRoom)
 router.post('/send-message', verifyToken, sendMessage)
 router.post('/add-to-chat-room/:chatRoomId', verifyToken, addUserToChatRoom)
-router.get('/get-chat-room', verifyToken, getChatRoomById)
+router.get('/get-chat-room/:chatRoomId', verifyToken, getChatRoomById)
 router.get('/chat-rooms', verifyToken, getChatRooms)
 router.get('/chat-rooms-for-user/:userId', verifyToken, getChatRoomForUser)
 router.patch('/:messageId/mark-read', verifyToken, markMessageAsRead)
